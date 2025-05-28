@@ -10,7 +10,7 @@ export const ENDPOINT_CONFIG: Record<ChatMode, string> = {
 }
 
 // Get the backend URL from environment variables with fallback
-export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:5000"
+export const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL || "https://flask-app-production-077c.up.railway.app"
 
 // Create a new conversation
 export async function createConversation(token: string): Promise<string> {

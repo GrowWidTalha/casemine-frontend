@@ -81,8 +81,8 @@ const LegalDocumentAppClient = () => {
 
                 // Fetch relevant data
                 const [relevantResponse, docResponse] = await Promise.all([
-                    fetch(`http://127.0.0.1:5000/find-relevant-ai/${documentId}`),
-                    fetch(`http://127.0.0.1:5000/document/${documentId}`),
+                    fetch(process.env.NEXT_PUBLIC_BACKEND_URL + `/find-relevant-ai/${documentId}`),
+                    fetch(process.env.NEXT_PUBLIC_BACKEND_URL + `/document/${documentId}`),
                 ])
 
                 if (!relevantResponse.ok) {

@@ -36,7 +36,7 @@ function App() {
         setIsUploading(true);
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/upload', {
+            const response = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/upload', {
                 method: 'POST',
                 body: formData
             });
