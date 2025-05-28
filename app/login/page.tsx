@@ -2,10 +2,11 @@
 import Copyright from '@/components/Copyright';
 import Footer from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
-import React, { useEffect, useState } from 'react';
+import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
-const LoginPage = () => {
+const LoginPageClient = () => {
+    
     const [isChecked, setIsChecked] = useState(false);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -173,5 +174,13 @@ const LoginPage = () => {
         </>
     );
 };
+
+const LoginPage = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LoginPageClient />
+        </Suspense>
+    )
+}
 
 export default LoginPage;

@@ -1,5 +1,5 @@
 "use client"
-import { useEffect, useState } from "react"
+import { Suspense, useEffect, useState } from "react"
 import balanceimg from "@/public/balanceimggraphicalview.png"
 import Image from "next/image"
 import { Navbar } from "@/components/Navbar"
@@ -49,7 +49,7 @@ interface DocumentResponse {
     status: string
 }
 
-const LegalDocumentApp = () => {
+const LegalDocumentAppClient = () => {
     const [relevantData, setRelevantData] = useState<ApiResponse | null>(null)
     const [documentData, setDocumentData] = useState<DocumentResponse | null>(null)
     const [loading, setLoading] = useState(false)
@@ -486,6 +486,14 @@ const LegalDocumentApp = () => {
             <Footer />
             <Copyright />
         </>
+    )
+}
+
+const LegalDocumentApp = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <LegalDocumentAppClient />
+        </Suspense>
     )
 }
 

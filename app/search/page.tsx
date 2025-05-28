@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from "next/navigation"
 import { searchArticles } from "@/lib/api-service"
 import { Loader2 } from "lucide-react"
@@ -15,7 +15,7 @@ interface SearchResult {
     match_type: string
 }
 
-export default function SearchResults() {
+const SearchResultsClient = () => {
     const searchParams = useSearchParams()
     const query = searchParams.get("q")
     const [results, setResults] = useState<SearchResult[]>([])
@@ -125,3 +125,13 @@ export default function SearchResults() {
         </>
     )
 }
+
+const SearchResults = () => {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SearchResultsClient />
+        </Suspense>
+    )
+}
+
+export default SearchResults;
