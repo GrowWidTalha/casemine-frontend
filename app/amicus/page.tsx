@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState, useRef, Suspense } from "react"
 import {
     PanelLeft,
     PanelRightClose,
@@ -27,7 +27,8 @@ import { v4 as uuidv4 } from "uuid"
 import type { ChatMode, Message, ArgumentType } from "@/lib/types"
 import { createConversation, sendMessage, uploadFile, getConversationHistory, loadAmicusRecentConversations } from "@/lib/api-service"
 
-export default function App() {
+// Create a client component that uses useSearchParams
+function AmicusClient() {
     const router = useRouter()
     const pathname = usePathname()
     const searchParams = useSearchParams()
@@ -822,5 +823,14 @@ export default function App() {
                 accept=".pdf,.docx,.doc,.txt"
             />
         </>
+    )
+}
+
+// Main page component with Suspense
+export default function Page() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <AmicusClient />
+        </Suspense>
     )
 }
