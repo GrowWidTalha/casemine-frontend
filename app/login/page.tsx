@@ -4,6 +4,7 @@ import Footer from '@/components/Footer';
 import { Navbar } from '@/components/Navbar';
 import React, { Suspense, useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { toast } from "sonner";
 
 const LoginPageClient = () => {
     
@@ -21,48 +22,61 @@ const LoginPageClient = () => {
 
     // 🔄 If already logged in, redirect away
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
-            router.push(redirectTo);
-        }
+      const token = localStorage.getItem("token");
+      if (searchParams.get("message") === "true") {
+        setTimeout(() => {
+          toast.info("Access denied. Log in to view this page.");
+        }, 100); // slight delay to ensure hydration
+      }
+
+      if (token) {
+        router.push(redirectTo);
+      }
     }, [router, redirectTo]);
 
     const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setError('');
-        setLoading(true);
+      e.preventDefault();
+      setError("");
+      setLoading(true);
 
-        try {
-            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ email, password }),
-            });
+      try {
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_BACKEND_URL + "/api/login",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ email, password }),
+          }
+        );
 
-            const data = await res.json();
+        const data = await res.json();
 
-            if (!res.ok) {
-                setError(data.message || 'Login failed');
-                setLoading(false);
-                return;
-            }
-
-            // Save token and user info
-            localStorage.setItem('token', data.token);
-            localStorage.setItem('user', JSON.stringify(data.user));
-
-            setSuccess(true);
-
-            // Slight delay to show success message
-            setTimeout(() => {
-                router.push(redirectTo);
-            }, 1000);
-        } catch (err) {
-            setError('Something went wrong. Please try again.');
-            setLoading(false);
+        if (!res.ok) {
+          setError(data.message || "Login failed");
+          setLoading(false);
+          return;
         }
+
+        // Save token and user info
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Set token in cookies (expires in 7 days)
+        document.cookie = `token=${data.token}; path=/; max-age=${
+          60 * 60 * 24 * 7
+        }; secure; samesite=strict`;
+        setSuccess(true);
+
+        // Slight delay to show success message
+        setTimeout(() => {
+          router.push(redirectTo);
+        }, 1000);
+      } catch (err) {
+        setError("Something went wrong. Please try again.");
+        setLoading(false);
+      }
     };
 
     return (
