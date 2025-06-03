@@ -189,10 +189,14 @@ export async function sendMessage(
   // Map request and response events
 
   return new Promise((resolve, reject) => {
-    // Define listener
+    const errorEvent = emitEvent
+      .replace(/:ask$/, ":error")
+      .replace(/_request$/, "_error");
+
+    // Response handler
     const responseHandler = (data: any) => {
-      socket.off(responseEvent, responseHandler); // Remove listener once used
-      console.log(resolve(data));
+      socket.off(responseEvent, responseHandler);
+      socket.off(errorEvent, errorHandler);
       if (data?.error) {
         reject(new Error(data.error));
       } else {
@@ -200,12 +204,17 @@ export async function sendMessage(
       }
     };
 
-    // Set up listener
-    socket.on(responseEvent, responseHandler);
+    // Error handler (e.g. "qa:error")
+    const errorHandler = (err: any) => {
+      socket.off(responseEvent, responseHandler);
+      socket.off(errorEvent, errorHandler);
+      reject(new Error(err?.message || "Unknown socket error"));
+    };
 
-    console.log(emitEvent);
-    console.log(payload);
-    console.log(token);
+    // Set up listeners
+    socket.on(responseEvent, responseHandler);
+    socket.on(errorEvent, errorHandler);
+
     // Emit event to backend
     socket.emit(emitEvent, {
       token,
@@ -215,8 +224,9 @@ export async function sendMessage(
     // Optional: Timeout safety
     setTimeout(() => {
       socket.off(responseEvent, responseHandler);
+      socket.off(errorEvent, errorHandler);
       reject(new Error("Response timed out"));
-    }, 30000); // 30 seconds timeout
+    }, 30000);
   });
 }
 // Upload a file
