@@ -33,20 +33,33 @@ export function Navbar() {
         try {
             const token = localStorage.getItem('token')
             if (token) {
-                await logoutUser(token)
-                localStorage.removeItem('token')
-                localStorage.removeItem('user')
-                setIsLoggedIn(false)
-                toast.success('Successfully logged out')
-                router.push('/')
+              await logoutUser(token);
+              localStorage.removeItem("token");
+              localStorage.removeItem("user");
+              // Remove from cookies (set with same name, path, and expired)
+              document.cookie = "token=; path=/; max-age=0";
+              setIsLoggedIn(false);
+              toast.success("Successfully logged out");
+              if (pathname !== "/") {
+                router.push("/");
+              } else {
+                router.refresh(); // force reload the current route
+              }
+              
             }
         } catch (error) {
-            console.error('Logout error:', error)
-            // Still remove token from localStorage even if API call fails
-            localStorage.removeItem('token')
-            localStorage.removeItem('user')
-            setIsLoggedIn(false)
-            router.push('/')
+          console.error("Logout error:", error);
+          // Still remove token from localStorage even if API call fails
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          // Remove from cookies (set with same name, path, and expired)
+          document.cookie = "token=; path=/; max-age=0";
+          setIsLoggedIn(false);
+          if (pathname !== "/") {
+            router.push("/");
+          } else {
+            router.refresh(); // force reload the current route
+          }
         }
     }
 

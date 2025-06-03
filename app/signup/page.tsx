@@ -48,34 +48,41 @@ function Page() {
 
         setLoading(true);
         try {
-            const res = await fetch(process.env.NEXT_PUBLIC_BACKEND_URL + '/api/signup', {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    first_name: firstName,
-                    last_name: lastName,
-                    country,
-                    email,
-                    phone_number: phone,
-                    password,
-                }),
-            });
-
-            const data = await res.json();
-            if (!res.ok) {
-                toast.error(data.message || "Signup failed.");
-                return;
+          const res = await fetch(
+            process.env.NEXT_PUBLIC_BACKEND_URL + "/api/signup",
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                first_name: firstName,
+                last_name: lastName,
+                country,
+                email,
+                phone_number: phone,
+                password,
+              }),
             }
+          );
 
-            localStorage.setItem("token", data.token);
-            if (data.user) {
-                localStorage.setItem("user", JSON.stringify(data.user));
-            }
+          const data = await res.json();
+          if (!res.ok) {
+            toast.error(data.message || "Signup failed.");
+            return;
+          }
 
-            toast.success("Signup successful! Redirecting to profile setup...");
-            router.push("/profile");
+          localStorage.setItem("token", data.token);
+          if (data.user) {
+            localStorage.setItem("user", JSON.stringify(data.user));
+          }
+
+          // Set token in cookies (expires in 7 days)
+          document.cookie = `token=${data.token}; path=/; max-age=${
+            60 * 60 * 24 * 7
+          }; secure; samesite=strict`;
+          toast.success("Signup successful! Redirecting to profile setup...");
+          router.push("/profile");
         } catch (err) {
             console.error(err);
             toast.error("Something went wrong. Please try again.");
