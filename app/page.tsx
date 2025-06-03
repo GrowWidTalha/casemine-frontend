@@ -15,18 +15,33 @@ import Copyright from "@/components/Copyright";
 import Link from "next/link";
 import logo from "@/public/logo2.png";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getSocket } from "@/utils/socket";
 
 export default function Home() {
   const router = useRouter();
-  useEffect(() => {
-    const socket = getSocket();
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-    return () => {
-      socket.disconnect();
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    setIsLoggedIn(!!user);
+
+    // Optional: Listen to changes in localStorage
+    const handleStorageChange = () => {
+      const updatedUser = localStorage.getItem("user");
+      setIsLoggedIn(!!updatedUser);
     };
+
+    window.addEventListener("storage", handleStorageChange);
+    return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) return;
+
+    const socket = getSocket();
+    // console.log("Socket connected");
+  }, [isLoggedIn]);
   return (
     <>
       <main className="flex min-h-screen flex-col">

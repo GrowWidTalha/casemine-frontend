@@ -6,8 +6,12 @@ let socket: Socket | null = null;
 export const getSocket = (): Socket => {
   if (!socket) {
     const URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000"; // Your backend URL
+    const userStr = localStorage.getItem("user");
+    const user = userStr ? JSON.parse(userStr) : null;
+    const userId = user?.id || user?._id || "";
 
     socket = io(URL, {
+      query: { userId }, // ⬅ Pass userId here
       transports: ["websocket"], // prefer websocket
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
@@ -23,16 +27,16 @@ export const getSocket = (): Socket => {
     });
 
     // Heartbeat monitoring
-    socket.io.on("ping", () => {
-      console.log("[Socket.IO] 🏓 Ping sent to server");
-    });
+    // Custom heartbeat (every 10 seconds)
+    setInterval(() => {
+      if (socket?.connected) {
+        console.log("[Heartbeat] 🔘 Sending ping...");
+        socket.emit("ping_from_client");
+      }
+    }, 10000); // 10 seconds
 
-    socket.on("pong", (latency) => {
-      console.log(
-        "[Socket.IO] 🏓 Pong received from server. Latency:",
-        latency,
-        "ms"
-      );
+    socket.on("pong_from_server", () => {
+      console.log("[Heartbeat] 🟢 Pong received from server");
     });
 
     socket.on("connect_error", (err) => {
