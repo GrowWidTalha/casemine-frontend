@@ -15,9 +15,18 @@ import Copyright from "@/components/Copyright";
 import Link from "next/link";
 import logo from "@/public/logo2.png";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
+import { getSocket } from "@/utils/socket";
 
 export default function Home() {
   const router = useRouter();
+  useEffect(() => {
+    const socket = getSocket();
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
   return (
     <>
       <main className="flex min-h-screen flex-col">
@@ -125,135 +134,142 @@ export default function Home() {
         <Sec3 />
         <Sec4 />
         <footer className="bg-white py-12 text-gray-500">
-  <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-      {/* Column 1 - Logo and Contact */}
-      <div className="col-span-1">
-        <div className="mb-6">
-          <Image
-            onClick={() => {
-              router.push("/");
-            }}
-            src={logo}
-            alt="GoPro Logo"
-            className="mb-4"
-          />
-        </div>
-        <h3 className="text-lg font-bold text-black mb-2">Eleanor Pena</h3>
-        <p className="text-gray-500 mb-2">Know us better!</p>
-        <div className="flex flex-col space-y-1">
-          <Link href="/signup" className="text-gray-500 hover:text-gray-500">
-            Request a Demo
-          </Link>
-          <Link href="#" className="text-gray-500 hover:text-gray-500">
-            Watch Casemine overview
-          </Link>
-          <Link href="#" className="text-gray-500 hover:text-gray-500">
-            Videos
-          </Link>
-        </div>
-      </div>
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+              {/* Column 1 - Logo and Contact */}
+              <div className="col-span-1">
+                <div className="mb-6">
+                  <Image
+                    onClick={() => {
+                      router.push("/");
+                    }}
+                    src={logo}
+                    alt="GoPro Logo"
+                    className="mb-4"
+                  />
+                </div>
+                <h3 className="text-lg font-bold text-black mb-2">
+                  Eleanor Pena
+                </h3>
+                <p className="text-gray-500 mb-2">Know us better!</p>
+                <div className="flex flex-col space-y-1">
+                  <Link
+                    href="/signup"
+                    className="text-gray-500 hover:text-gray-500"
+                  >
+                    Request a Demo
+                  </Link>
+                  <Link href="#" className="text-gray-500 hover:text-gray-500">
+                    Watch Casemine overview
+                  </Link>
+                  <Link href="#" className="text-gray-500 hover:text-gray-500">
+                    Videos
+                  </Link>
+                </div>
+              </div>
 
-      {/* Column 2 - About Us */}
-      <div className="col-span-1">
-        <h3 className="text-lg font-bold text-black mb-6">ABOUT US</h3>
-        <div className="flex flex-col space-y-4">
-          <Link
-            href="/aboutus"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Mission & Vision
-          </Link>
-          <Link
-            href="/aboutus"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Our Company
-          </Link>
-          <Link
-            href="/aboutus"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Our Projects
-          </Link>
-          <Link
-            href="/aboutus"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Our Team
-          </Link>
-        </div>
-      </div>
+              {/* Column 2 - About Us */}
+              <div className="col-span-1">
+                <h3 className="text-lg font-bold text-black mb-6">ABOUT US</h3>
+                <div className="flex flex-col space-y-4">
+                  <Link
+                    href="/aboutus"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Mission & Vision
+                  </Link>
+                  <Link
+                    href="/aboutus"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Our Company
+                  </Link>
+                  <Link
+                    href="/aboutus"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Our Projects
+                  </Link>
+                  <Link
+                    href="/aboutus"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Our Team
+                  </Link>
+                </div>
+              </div>
 
-      {/* Column 3 - Discover */}
-      <div className="col-span-1">
-        <h3 className="text-lg font-bold text-black mb-6">DISCOVER</h3>
-        <div className="flex flex-col space-y-4">
-          <Link
-            href="/ai_research"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Projects & Research
-          </Link>
-          <Link
-            href="/messages"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Messages
-          </Link>
-          <Link
-            href="/plan"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Pricing
-          </Link>
-          <Link
-            href="/recomendation_services"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            AttorneyIQ
-          </Link>
-        </div>
-      </div>
+              {/* Column 3 - Discover */}
+              <div className="col-span-1">
+                <h3 className="text-lg font-bold text-black mb-6">DISCOVER</h3>
+                <div className="flex flex-col space-y-4">
+                  <Link
+                    href="/ai_research"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Projects & Research
+                  </Link>
+                  <Link
+                    href="/messages"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Messages
+                  </Link>
+                  <Link
+                    href="/plan"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Pricing
+                  </Link>
+                  <Link
+                    href="/recomendation_services"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    AttorneyIQ
+                  </Link>
+                </div>
+              </div>
 
-      {/* Column 4 - Useful Links */}
-      <div className="col-span-1">
-        <h3 className="text-lg font-bold text-black mb-6">Casemine Tools</h3>
-        <div className="flex flex-col space-y-4">
-          <Link
-            href="/caseplus"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Citation Codes
-          </Link>
-          <Link
-            href="/choose_url"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Judgment Search
-          </Link>
-          <Link
-            href="/citation"
-            className="flex items-center text-gray-500 hover:text-gray-500"
-          >
-            <ChevronRight className="h-4 w-4 mr-2" />
-            Citation Search
-          </Link>
-        </div>
-      </div>
-    </div>
-  </div>
-</footer>
+              {/* Column 4 - Useful Links */}
+              <div className="col-span-1">
+                <h3 className="text-lg font-bold text-black mb-6">
+                  Casemine Tools
+                </h3>
+                <div className="flex flex-col space-y-4">
+                  <Link
+                    href="/caseplus"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Citation Codes
+                  </Link>
+                  <Link
+                    href="/choose_url"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Judgment Search
+                  </Link>
+                  <Link
+                    href="/citation"
+                    className="flex items-center text-gray-500 hover:text-gray-500"
+                  >
+                    <ChevronRight className="h-4 w-4 mr-2" />
+                    Citation Search
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+        </footer>
 
         <Copyright />
       </main>
