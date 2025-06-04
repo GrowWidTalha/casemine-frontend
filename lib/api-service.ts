@@ -34,13 +34,13 @@ export const ENDPOINT_CONFIG: Record<
   },
   Draft: {
     endpoint: "draft",
-    socketEmit: "draft_request", // no backend shown, keep if you have it
-    socketResponse: "draft_response",
+    socketEmit: "contract:draft", // updated to match backend socket event
+    socketResponse: "contract:response", // updated to match backend socket response
   },
   "Contract Review": {
     endpoint: "contract_review",
-    socketEmit: "contract_review_request",
-    socketResponse: "contract_review_response",
+    socketEmit: "contract:review", // updated to match backend socket event
+    socketResponse: "contract:response", // updated to match backend socket response
   },
 };
 
