@@ -5,7 +5,7 @@ let socket: Socket | null = null;
 
 export const getSocket = (): Socket => {
   if (!socket) {
-    const URL = process.env.NEXT_PUBLIC_SOCKET_URL || "http://localhost:5000"; // Your backend URL
+    const URL = process.env.NEXT_PUBLIC_BACKEND_URL; // Your backend URL
     const userStr = localStorage.getItem("user");
     const user = userStr ? JSON.parse(userStr) : null;
     const userId = user?.id || user?._id || "";
