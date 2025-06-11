@@ -20,7 +20,13 @@ export function middleware(request: NextRequest) {
   const isLoggedIn = !!token;
 
   // Publicly accessible paths
-  const publicPaths = ["/", "/login", "/signup"];
+  const publicPaths = [
+    "/",
+    "/login",
+    "/signup",
+    "/forget-password",
+    "/reset-password",
+  ];
 
   const isPublic = publicPaths.includes(pathname);
 
