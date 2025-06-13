@@ -54,7 +54,8 @@ const LoginPageClient = () => {
         const data = await res.json();
 
         if (!res.ok) {
-          setError(data.message || "Login failed");
+          setError(data.error || "Login failed");
+          toast.error(data.error || "Login failed");
           setLoading(false);
           return;
         }
