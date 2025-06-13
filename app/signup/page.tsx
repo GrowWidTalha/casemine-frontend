@@ -19,6 +19,7 @@ function Page() {
     password: "",
     termsAccepted: false,
     notRobot: false,
+    role: "", // Added
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,6 +44,7 @@ function Page() {
       notRobot,
       country,
       password,
+      role, // Added
     } = form;
 
     if (
@@ -52,7 +54,8 @@ function Page() {
       !phone ||
       !termsAccepted ||
       !notRobot ||
-      !password
+      !password ||
+      !role
     ) {
       toast.error("Please fill all required fields and agree to the terms.");
       return;
@@ -79,6 +82,7 @@ function Page() {
             email,
             phone_number: phone,
             password,
+            role, // Added
           }),
         }
       );
@@ -177,6 +181,25 @@ function Page() {
                   />
                 </div>
               ))}
+              <div className="mb-4">
+                <label htmlFor="role" className="block text-gray-700 mb-1">
+                  Select Role <span className="text-red-500">*</span>
+                </label>
+                <select
+                  id="role"
+                  value={form.role}
+                  onChange={(e) =>
+                    setForm((prev) => ({ ...prev, role: e.target.value }))
+                  }
+                  className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                  <option value="">-- Choose Role --</option>
+                  <option value="Judge">Judge</option>
+                  <option value="Student">Student</option>
+                  <option value="Prosecutor">Prosecutor</option>
+                  <option value="Other">Other</option>
+                </select>
+              </div>
 
               <div className="mb-4 flex items-center">
                 <input
@@ -230,24 +253,6 @@ function Page() {
                 </a>
               </div>
             </form>
-
-            <div className="mt-12">
-              <p className="text-gray-800 font-medium mb-4 text-center">
-                Are you a Judge, Student or Prosecutor? You are eligible for a
-                free Casemine subscription.
-              </p>
-              <div className="flex justify-between space-x-4">
-                {["Judge", "Student", "Prosecutor"].map((role) => (
-                  <button
-                    key={role}
-                    onClick={() => router.push("/")}
-                    className="bg-yellow-400 text-black py-2 px-4 rounded-md hover:bg-yellow-500 flex-1"
-                  >
-                    {role}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
       </div>
