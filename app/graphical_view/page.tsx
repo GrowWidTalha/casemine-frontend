@@ -75,22 +75,6 @@ const LegalDocumentAppClient = () => {
 
   useEffect(() => {
     const fetcher = async () => {
-      const cacheKey = `relevantData_${documentId}`;
-      const cache = localStorage.getItem(cacheKey);
-      const cacheTimestamp = localStorage.getItem(`${cacheKey}_timestamp`);
-      const oneHour = 60 * 60 * 1000; // 1 hour in ms
-
-      // Check if cache is valid (less than 1 hour old)
-      if (cache && cacheTimestamp) {
-        const timestamp = Number.parseInt(cacheTimestamp);
-        if (Date.now() - timestamp < oneHour) {
-          const parsedData = JSON.parse(cache);
-          setRelevantData(parsedData.relevantData);
-          setDocumentData(parsedData.documentData);
-          return;
-        }
-      }
-
       try {
         setLoading(true);
         const params = new URLSearchParams();
@@ -99,7 +83,7 @@ const LegalDocumentAppClient = () => {
           params.append("start_year", selectedYear);
           params.append("end_year", selectedYear);
         }
-        // Fetch relevant data
+
         const [relevantResponse, docResponse] = await Promise.all([
           fetch(
             process.env.NEXT_PUBLIC_BACKEND_URL +
@@ -117,28 +101,16 @@ const LegalDocumentAppClient = () => {
         const relevant = await relevantResponse.json();
         const docData = docResponse.ok ? await docResponse.json() : null;
 
-        // Update state
         setRelevantData(relevant);
         setDocumentData(docData);
-
-        // Save to localStorage
-        localStorage.setItem(
-          cacheKey,
-          JSON.stringify({
-            relevantData: relevant,
-            documentData: docData,
-          })
-        );
-        localStorage.setItem(`${cacheKey}_timestamp`, Date.now().toString());
       } catch (error) {
         console.error("Error fetching data:", error);
-        // Optionally set error state here
       } finally {
         setLoading(false);
       }
     };
 
-    if (documentId || selectedCourt || selectedYear) {
+    if (documentId) {
       fetcher();
     }
   }, [documentId, selectedCourt, selectedYear]);
